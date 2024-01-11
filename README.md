@@ -1,7 +1,16 @@
 # kpsdk-solver
+Semi-reverse-engineered Kasada Bot Protection.
+
+## Getting Started
+```
+git clone https://github.com/0x6a69616e/kpsdk-solver.git
+npm install
+npm run start
+```
 
 ## Useful Resources
 - [digipres.club - moralrecordings: "Urgh. Sometime back in Septemb…"](https://digipres.club/@moralrecordings/109494350891524509)
+- [Kasada p.js (x-kpsdk-cd, x-kpsdk-cd, integrity) - CodeBuug](https://www.codebuug.com/cs135253952)
 - nullpt.rs
   - [Devirtualizing Nike.com's Bot Protection (Part 1) | nullpt.rs
 ](https://www.nullpt.rs/devirtualizing-nike-vm-1)
