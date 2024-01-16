@@ -5,6 +5,7 @@ Semi-reverse-engineered Kasada Bot Protection.
 ```
 git clone https://github.com/0x6a69616e/kpsdk-solver.git
 npm install
+npx playwright install firefox
 npm run start
 ```
 
