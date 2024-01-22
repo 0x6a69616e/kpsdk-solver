@@ -9,6 +9,24 @@ npx playwright install firefox
 npm run start
 ```
 
+## File Structure
+```
+.
+├── ./kpsdk/
+│   ├── ./kpsdk/p.js
+│   ├── ./kpsdk/p_deobf.js
+│   └── ./kpsdk/p_deobf_modified.js
+├── ./src/
+│   ├── ./src/modules/
+│   │   ├── ./src/modules/part-1.js
+│   │   └── ./src/modules/part-2.js
+│   └── ./src/index.js
+├── ./.gitignore
+├── ./LICENSE
+├── ./README.md
+└── ./package.json
+```
+
 ## Useful Resources
 - [digipres.club - moralrecordings: "Urgh. Sometime back in Septemb…"](https://digipres.club/@moralrecordings/109494350891524509)
 - [Kasada p.js (x-kpsdk-cd, x-kpsdk-cd, integrity) - CodeBuug](https://www.codebuug.com/cs135253952)
