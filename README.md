@@ -28,12 +28,11 @@ npm run start
 ├── README.md
 └── package.json
 ```
-<br>
-
-The `./kpsdk/` folder contains a few versions of Kasada's `p.js` script.
-- `p.js` - Original snapshot
-- `p_deobf.js` - Deobfuscated variation of `p.js` intended for script analysis and reference
-- `p_deobf_modified.js` - Modified `p_deobf.js` to expose the internal variables and functions of the script to the global scope. Minified for efficient synchronous file processing with [`fs.readFileSync()`](https://github.com/0x6a69616e/kpsdk-solver/blob/51ee22b3c255e97ebdd31d9d1ba8320f4d6bc1fc/src/modules/part-2.js#L18)
+- `./kpsdk/p.js` - Original snapshot of Kasada's `p.js` script
+- `./kpsdk/p_deobf.js` - Deobfuscated `./kpsdk/p.js` for script analysis and reference
+- `./kpsdk/p_deobf_modified.js` - Modified `./kpsdk/p_deobf.js` to expose the internal variables and functions of the script to the global scope. Minified for efficient synchronous file processing with [`fs.readFileSync()`](https://github.com/0x6a69616e/kpsdk-solver/blob/51ee22b3c255e97ebdd31d9d1ba8320f4d6bc1fc/src/modules/part-2.js#L18)
+- `./src/modules/part-1.js` - Obtains `KPSDK.message`
+- `./src/modules/part-2.js` - Processes `KPSDK.message`, returns `kpsdk-*` values
 
 ## Useful Resources
 A collection of resources used to gain a thorough understanding of Kasada's inner workings.
