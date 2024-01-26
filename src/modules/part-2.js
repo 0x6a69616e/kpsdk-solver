@@ -38,7 +38,7 @@ const {
   solveChallenge
 } = _0x3fa0dc(8145 || 0x1fd1).challengeModuleV2();
 
-module.exports = function(message) {
+module.exports = function(message, timestamp = Date.now()) {
   const {
     cryptoChallengeEnabled,
     encodedClientToken,
@@ -46,7 +46,7 @@ module.exports = function(message) {
     serverTime
   } = parseSDKMessage(message);
 
-  addServerOffset(Date.now(), serverTime);
+  addServerOffset(timestamp, serverTime);
 
   return {
     cd: JSON.stringify(solveChallenge(requestChallengeSync())),
