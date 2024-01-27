@@ -22,8 +22,14 @@ module.exports = async function () {
     document.body.append(iframe);
   });
   
-  const message = await new Promise(resolve => page.once('pageerror', ({ message }) => resolve(message)));
+  const
+    message = await new Promise(resolve => page.once('pageerror', ({ message }) => resolve(message))),
+    endTime = Date.now();
   
   await browser.close();
-  return message;
+  
+  return {
+    endTime,
+    message
+  };
 }
