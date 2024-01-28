@@ -1,10 +1,12 @@
 const { firefox } = require('playwright');
 
 module.exports = async function () {
-  const browser = await firefox.launch({
-    headless: true
-  });
-  const page = await browser.newPage();
+  const
+    browser = await firefox.launch({
+      headless: true
+    }),
+    context = await browser.newContext(),
+    page = await context.newPage();
   
   await page.goto('about:blank');
   
@@ -18,9 +20,14 @@ module.exports = async function () {
     
     iframe.style.width = iframe.style.height = iframe.style.border = '0';
     iframe.style.display = 'none';
+    iframe.id = 'iframe';
     
     document.body.append(iframe);
   });
+  
+  await new Promise(resolve => page.once('pageerror', resolve));
+  
+  await page.evaluate(() => document.getElementById('iframe').src = document.getElementById('iframe').src);
   
   const
     message = await new Promise(resolve => page.once('pageerror', ({ message }) => resolve(message))),
