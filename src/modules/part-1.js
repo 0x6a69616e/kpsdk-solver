@@ -8,7 +8,7 @@ module.exports = async function () {
     context = await browser.newContext(),
     page = await context.newPage();
   
-  await page.goto('about:blank');
+  await page.goto('view-source:https://sdk.vercel.ai');
   
   await page.evaluate(() => {
     window.addEventListener('message', ({ data }) => {
