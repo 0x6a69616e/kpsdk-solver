@@ -27,6 +27,8 @@ module.exports = async function () {
     })),
     endTime = Date.now();
   
+  await page.close();
+  await context.close();
   await browser.close();
   
   return {
