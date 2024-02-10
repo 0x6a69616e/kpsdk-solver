@@ -1,15 +1,21 @@
-const part1 = require('./modules/part-1.js');
+const {
+  close,
+  get_browser,
+
+  get_message
+} = require('./modules/part-1.js');
 const part2 = require('./modules/part-2.js');
 
+
 (async () => {
-  // obtains KPSDK.message
-  const {
-    endTime,
-    message
-  } = await part1();
+  const [ context ] = await get_browser();
   
-  // processes the KPSDK message to return ct (client token), cd (challenge data), and v (version) headers
-  const kpsdk = part2(message, endTime);
+  const KPSDK_message = await get_message('https://sdk.vercel.ai');
   
-  console.log(kpsdk);
+  const KPSDK = part2(...KPSDK_message.data);
+  const cookies = await context.cookies();
+
+  console.log(KPSDK_message, KPSDK, cookies);
+
+  await close();
 })();
