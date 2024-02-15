@@ -1,8 +1,6 @@
 # kpsdk-solver
 [WIP] Semi-reverse-engineered Kasada Bot Protection.
 
-*`kpsdk-cd`, `kpsdk-ct`, `kpsdk-v`*
-
 ## Getting Started
 ```
 git clone https://github.com/0x6a69616e/kpsdk-solver.git
@@ -10,6 +8,16 @@ npm install
 npx playwright install firefox
 npm run start
 ```
+
+
+## Notes
+- Further testing and analysis in different browsers reveal that the validity of a browser can be determined by `KPSDK.message`
+  - `KPSDK.message` is parsed into 4 useful chunks of data.
+    ```md
+    KPSDK:DONE:<encodedClientToken>::<cryptoChallengeEnabled>:2:<serverTime>:<reinterrogationTimeoutDuration>
+    ```
+  - Requests to Kasada-protected endpoints are observed to succeed when `reinterrogationTimeoutDuration` is present.
+
 
 ## File Structure
 ```
@@ -34,8 +42,9 @@ npm run start
 - `./src/modules/part-1.js` - Obtains `KPSDK.message`
 - `./src/modules/part-2.js` - Processes `KPSDK.message`, returns `kpsdk-*` values
 
+
 ## Useful Resources
-A collection of resources used to gain a thorough understanding of Kasada's inner workings.
+A collection of resources I've used to gain a thorough understanding of Kasada's inner workings.
 - [digipres.club - moralrecordings: "Urgh. Sometime back in Septemb…"](https://digipres.club/@moralrecordings/109494350891524509)
 - [Kasada p.js (x-kpsdk-cd, x-kpsdk-cd, integrity) - CodeBuug](https://www.codebuug.com/cs135253952)
 - nullpt.rs
