@@ -11,12 +11,16 @@ npm run start
 
 
 ## Notes
-- Further testing and analysis in different browsers reveal that the validity of a browser can be determined by `KPSDK.message`
+- With cookies enabled, an initial request to `/fp` returns a status 429. Subsequent requests will return a status 200.
+  - `/fp` will run a browser fingerprinting script at `/ips.js` if the received status code is a 429.
+  - `/fp` will directly send a pre-generated `KPSDK.message` (without the need for fingerprinting) if the received status code is a 200.
+- Validity can be determined by `KPSDK.message`
   - `KPSDK.message` is parsed into 4 useful chunks of data.
     ```md
     KPSDK:DONE:<encodedClientToken>::<cryptoChallengeEnabled>:2:<serverTime>:<reinterrogationTimeoutDuration>
     ```
   - Requests to Kasada-protected endpoints are observed to succeed when `reinterrogationTimeoutDuration` is present.
+  - `reinterrogationTimeoutDuration` is not present if the `/fp` iframe is improperly configured.
 
 
 ## File Structure
