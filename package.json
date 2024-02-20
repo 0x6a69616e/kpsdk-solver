@@ -5,8 +5,8 @@
   "description": "Semi-reverse-engineered Kasada Bot Protection.",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/test.js",
+    "test": "node src/test.js"
   },
   "keywords": [],
   "license": "MIT",
