@@ -17,40 +17,4 @@ const {
   _0x147b85
 } = (window.eval(fs.readFileSync('kpsdk/p_deobf_modified.js', 'utf-8')), window);
 
-const {
-  getVersion
-} = _0x3fa0dc(2764 || 0xacc);
-
-const {
-  InterceptConfigManager,
-  parseSDKMessage
-} = _0x3fa0dc(5939 || 0x1733);
-
-const {
-  addServerOffset,
-  formFieldNames,
-  formFields,
-  getCurrentOffset,
-  headerNames,
-  headers,
-  requestChallenge,
-  requestChallengeSync,
-  solveChallenge
-} = _0x3fa0dc(8145 || 0x1fd1).challengeModuleV2();
-
-module.exports = function(message, timestamp = Date.now()) {
-  const {
-    cryptoChallengeEnabled,
-    encodedClientToken,
-    reinterrogationTimeoutDuration,
-    serverTime
-  } = parseSDKMessage(message);
-
-  addServerOffset(timestamp, serverTime);
-
-  return {
-    cd: JSON.stringify(solveChallenge(requestChallengeSync())),
-    ct: encodedClientToken,
-    v: getVersion()
-  };
-};
+module.exports = (arr => arr.reduce((acc, num) => (acc[num] = _0x147b85[num].exports, acc), Array(Math.max(...arr))))(Object.keys(_0x147b85).sort().map(Number));
