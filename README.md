@@ -9,6 +9,20 @@ npx playwright install firefox
 npm run start
 ```
 
+
+## Notes
+- With cookies enabled, an initial request to `/fp` returns a status 429. Subsequent requests will return a status 200.
+  - `/fp` will run a browser fingerprinting script at `/ips.js` if the received status code is a 429.
+  - `/fp` will directly send a pre-generated `KPSDK.message` (without the need for fingerprinting) if the received status code is a 200.
+- Validity can be determined by `KPSDK.message`
+  - `KPSDK.message` is parsed into 4 useful chunks of data.
+    ```md
+    KPSDK:DONE:<encodedClientToken>::<cryptoChallengeEnabled>:2:<serverTime>:<reinterrogationTimeoutDuration>
+    ```
+  - Requests to Kasada-protected endpoints are observed to succeed when `reinterrogationTimeoutDuration` is present.
+  - `reinterrogationTimeoutDuration` is not present if the `/fp` iframe is improperly configured.
+
+
 ## Contents
 ```
 .
@@ -35,7 +49,8 @@ npm run start
 - `test.js` - An example usage of kpsdk-solver against the Vercel AI Playground.
 
 
-## Resources
+## Useful Resources
+A collection of resources I've used to gain a thorough understanding of Kasada's inner workings.
 - [digipres.club - moralrecordings: "Urgh. Sometime back in Septemb…"](https://digipres.club/@moralrecordings/109494350891524509)
 - [Kasada p.js (x-kpsdk-cd, x-kpsdk-cd, integrity) - CodeBuug](https://www.codebuug.com/cs135253952)
 - nullpt.rs
