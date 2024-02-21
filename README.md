@@ -1,5 +1,5 @@
 # kpsdk-solver
-[WIP] Semi-reverse-engineered Kasada Bot Protection.
+A functional solver for [Kasada](https://www.kasada.io/)'s bot mitigation service.
 
 ## Getting Started
 ```
@@ -23,7 +23,7 @@ npm run start
   - `reinterrogationTimeoutDuration` is not present if the `/fp` iframe is improperly configured.
 
 
-## File Structure
+## Contents
 ```
 .
 ├── kpsdk/
@@ -31,20 +31,22 @@ npm run start
 │   ├── p_deobf.js
 │   └── p_deobf_modified.js
 ├── src/
-│   ├── modules/
-│   │   ├── part-1.js
-│   │   └── part-2.js
-│   └── index.js
+│   ├── index.js
+│   ├── kasada_internals.js
+│   └── test.js
 ├── .gitignore
 ├── LICENSE
 ├── README.md
 └── package.json
 ```
-- `./kpsdk/p.js` - Original snapshot of Kasada's `p.js` script
-- `./kpsdk/p_deobf.js` - Deobfuscated `./kpsdk/p.js` for script analysis and reference
-- `./kpsdk/p_deobf_modified.js` - Modified `./kpsdk/p_deobf.js` to expose the internal variables and functions of the script to the global scope. Minified for efficient synchronous file processing with [`fs.readFileSync()`](https://github.com/0x6a69616e/kpsdk-solver/blob/51ee22b3c255e97ebdd31d9d1ba8320f4d6bc1fc/src/modules/part-2.js#L18)
-- `./src/modules/part-1.js` - Obtains `KPSDK.message`
-- `./src/modules/part-2.js` - Processes `KPSDK.message`, returns `kpsdk-*` values
+### kpsdk
+- `p.js` - Original snapshot of Kasada's SDK script.
+- `p_deobf.js` - Deobfuscated `p.js` for script analysis and reference.
+- `p_deobf_modified.js` - Modified `p_deobf.js` to expose the internal variables and functions of the script to the global scope. Minified for efficient synchronous file processing.
+### src
+- `index.js` - The core module of kpsdk-solver itself.
+- `kasada_internals.js` - An export of Kasada's internal modules taken from `kpsdk/p.js`
+- `test.js` - An example usage of kpsdk-solver against the Vercel AI Playground.
 
 
 ## Useful Resources
