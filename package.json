@@ -1,6 +1,6 @@
 {
   "name": "kpsdk-solver",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": "0x6a69616e",
   "description": "Semi-reverse-engineered Kasada Bot Protection.",
   "main": "src/index.js",
