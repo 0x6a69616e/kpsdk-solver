@@ -4,6 +4,7 @@
   "author": "0x6a69616e",
   "description": "Semi-reverse-engineered Kasada Bot Protection.",
   "main": "src/index.js",
+  "type": "module",
   "scripts": {
     "start": "node src/test.js",
     "test": "node src/test.js"
