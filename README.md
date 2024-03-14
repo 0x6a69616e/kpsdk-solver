@@ -1,6 +1,8 @@
 # kpsdk-solver
 > A functional solver for Kasada's bot mitigation service.
 
+### [Solver v2 Coming Soon!](https://github.com/0x6a69616e/kpsdk-solver/pull/12)
+
 [Kasada](https://www.kasada.io/) is a bot detection and mitigation company that offers a [frictionless and secure alternative to CAPTCHAs](https://www.kasada.io/captcha-alternative/). Despite multiple attempts, many have been unsuccessful in reverse-engineering their defenses, prompting them to turn to solvers that come at a cost. However, rather than reversing Kasada's complex system entirely, we manipulate the browser that runs it. Utilizing this concept, combined with an undetectable automated browser, we can operate Kasada's SDK ourselves to generate valid `x-kpsdk-*` headers.
 
 ## Getting Started
