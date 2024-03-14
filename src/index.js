@@ -58,11 +58,9 @@ function build(config) {
 
     !(typeof page_cb === 'function') || await page_cb(page);
     await page.addScriptTag(config.kasada.sdk_script);
-    const fp_listener = async res => {
-      if (/\/149e9513-01fa-4fb0-aad4-566afd725d1b\/2d206a39-8ed7-437e-a3be-862e0f06eea3\/fp/.test(res.url())) {
-        if (!(await res.body()).length) throw new Error(res.url() + ' responded with no body');
-      }
-    };
+    const fp_listener = async res => !/\/149e9513-01fa-4fb0-aad4-566afd725d1b\/2d206a39-8ed7-437e-a3be-862e0f06eea3\/fp/.test(res.url()) || (() => {
+      if (!(await res.body()).length) throw new Error(res.url() + ' responded with no body');
+    })();
 
     page.on('response', fp_listener);
     const messages = await page.evaluate(config => new Promise(resolve => {
