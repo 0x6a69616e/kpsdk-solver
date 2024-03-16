@@ -23,7 +23,10 @@ function build(config) {
       }) => {
         await page.route(url, fn = nameFunction('_' + makeId(), async (route, request) => {
           if (request.headers()['x-trace-id'] !== trace_id) return;
-          resolve(route);
+          resolve({
+            request,
+            route
+          });
           if (page.isClosed) return;
           await request.response();
           await page.unroute(url, fn);
@@ -54,13 +57,17 @@ function build(config) {
       await page.unroute('*/**', handler);
     });
 
-    await page.goto(config.parent_url, { waitUntil: 'commit' });
+    await page.goto(config.parent_url, {
+      waitUntil: 'commit'
+    });
 
     !(typeof page_cb === 'function') || await page_cb(page);
     await page.addScriptTag(config.kasada.sdk_script);
-    const fp_listener = async res => !/\/149e9513-01fa-4fb0-aad4-566afd725d1b\/2d206a39-8ed7-437e-a3be-862e0f06eea3\/fp/.test(res.url()) || (() => {
-      if (!(await res.body()).length) throw new Error(res.url() + ' responded with no body');
-    })();
+    const fp_listener = async res => {
+      if (/\/149e9513-01fa-4fb0-aad4-566afd725d1b\/2d206a39-8ed7-437e-a3be-862e0f06eea3\/fp/.test(res.url())) {
+        if (!(await res.body()).length) throw new Error(res.url() + ' responded with no body');
+      }
+    };
 
     page.on('response', fp_listener);
     const messages = await page.evaluate(config => new Promise(resolve => {
@@ -76,7 +83,9 @@ function build(config) {
         },
         origin
       }));
-      window.addEventListener('kpsdk-ready', () => !KPSDK.isReady() || resolve(msgs), { once: true });
+      window.addEventListener('kpsdk-ready', () => !KPSDK.isReady() || resolve(msgs), {
+        once: true
+      });
       window.KPSDK.configure(config);
     }), config.kasada.configuration);
     page.removeListener('response', fp_listener);
@@ -89,7 +98,9 @@ function build(config) {
 }
 
 function KPSDK_SOLVER(config) {
-  return { create: build(config) }
+  return {
+    create: build(config)
+  }
 }
 
-export default KPSDK_SOLVER;
+export { KPSDK_SOLVER as default };
