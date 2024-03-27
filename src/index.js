@@ -14,23 +14,19 @@ function makeId(len = 32) {
 function build(config) {
   return async (context, page_cb) => {
     const page = await context.newPage();
+
+    const sdk_config = config?.kasada?.configuration;
+    const sdk_script = config?.kasada?.['sdk-script'];
     const {
-      kasada: {
-        configuration: sdk_config,
-        'sdk-script': sdk_script
-      },
-      parent: {
-        'load-complete': lc,
-        url
-      }
-    } = config;
-    
+      'load-complete': lc,
+      url
+    }  = config.parent;
+
     typeof page_cb !== 'function' || await page_cb(page);
 
     await page.goto(await (async () => {
       if (lc) return url;
 
-      // handle HTTP redirects
       const response = await page.request.get(url);
       await page.route('*/**', async function handler(route) {
         await route.fulfill({
@@ -41,12 +37,11 @@ function build(config) {
         await page.unroute('*/**', handler);
       });
       return response.url();
-    })(), lc ? {
+    })(), {
       waitUntil: 'commit'
-    } : undefined);
+    });
     
-    // if load-complete is enabled, assume target page already has a p.js script to load
-    lc || await page.addScriptTag(sdk_script);
+    !sdk_script || await page.addScriptTag(sdk_script);
 
     const fp_listener = res => !/\/149e9513-01fa-4fb0-aad4-566afd725d1b\/2d206a39-8ed7-437e-a3be-862e0f06eea3\/fp/.test(res.url()) || (async _ => {
       if (!(await res.body()).length) throw new Error(res.url() + ' responded with no body');
@@ -69,7 +64,7 @@ function build(config) {
       window.addEventListener('kpsdk-ready', () => !KPSDK.isReady() || resolve(msgs), {
         once: true
       });
-      window.KPSDK.configure(config);
+      !config || window.KPSDK.configure(config);
     }), sdk_config);
     page.removeListener('response', fp_listener);
 
