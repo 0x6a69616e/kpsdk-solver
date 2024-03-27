@@ -15,55 +15,36 @@ function makeId(len = 32) {
 
 function build(config) {
   return async (context, page_cb) => {
-    if (!context || context.constructor.name !== 'BrowserContext') throw new Error('a BrowserContext was not provided. received ' + context?.constructor.name || typeof context);
     const page = await context.newPage();
 
-    function fetch(url, options = {}) {
-      return new Promise(async (resolve, {
-        trace_id = makeId(),
-        fn
-      }) => {
-        await page.route(url, fn = nameFunction('_' + makeId(), async (route, request) => {
-          if (request.headers()['x-trace-id'] !== trace_id) return;
-          resolve({
-            request,
-            route
-          });
-          if (page.isClosed) return;
-          await request.response();
-          await page.unroute(url, fn);
-        }));
+    const sdk_config = config?.kasada?.configuration;
+    const sdk_script = config?.kasada?.['sdk-script'];
+    const {
+      'load-complete': lc,
+      url
+    }  = config.parent;
 
-        try {
-          await page.evaluate(args => window.fetch(...args), [
-            url,
-            {
-              ...options,
-              headers: {
-                ...options.headers,
-                'X-Trace-Id': trace_id
-              }
-            }
-          ]);
-        } catch (_) {};
-      });
-    };
+    typeof page_cb !== 'function' || await page_cb(page);
 
-    const response = await page.request.get(config.parent_url);
-    await page.route('*/**', async function handler(route) {
-      await route.fulfill({
-        response,
-        status: 200,
-        body: ''
+    await page.goto(await (async () => {
+      if (lc) return url;
+
+      const response = await page.request.get(url);
+      await page.route('*/**', async function handler(route) {
+        await route.fulfill({
+          response,
+          status: 200,
+          body: ''
+        });
+        await page.unroute('*/**', handler);
       });
-      await page.unroute('*/**', handler);
-    });
-    await page.goto(response.url(), {
+      return response.url();
+    })(), {
       waitUntil: 'commit'
     });
+    
+    !sdk_script || await page.addScriptTag(sdk_script);
 
-    !(typeof page_cb === 'function') || await page_cb(page);
-    await page.addScriptTag(config.kasada.sdk_script);
     const fp_listener = res => !/\/149e9513-01fa-4fb0-aad4-566afd725d1b\/2d206a39-8ed7-437e-a3be-862e0f06eea3\/fp/.test(res.url()) || (async _ => {
       if (!(await res.body()).length) throw new Error(res.url() + ' responded with no body');
     })();
@@ -85,12 +66,41 @@ function build(config) {
       window.addEventListener('kpsdk-ready', () => !KPSDK.isReady() || resolve(msgs), {
         once: true
       });
-      window.KPSDK.configure(config);
-    }), config.kasada.configuration);
+      !config || window.KPSDK.configure(config);
+    }), sdk_config);
     page.removeListener('response', fp_listener);
 
     return (page.solver = {
-      fetch,
+      fetch(url, options = {}) {
+        return new Promise(async (resolve, {
+          trace_id = makeId(),
+          fn
+        }) => {
+          await page.route(url, fn = nameFunction('_' + makeId(), async (route, request) => {
+            if (request.headers()['x-trace-id'] !== trace_id) return;
+            resolve({
+              request,
+              route
+            });
+            if (page.isClosed) return;
+            await request.response();
+            await page.unroute(url, fn);
+          }));
+  
+          try {
+            await page.evaluate(args => window.fetch(...args), [
+              url,
+              {
+                ...options,
+                headers: {
+                  ...options.headers,
+                  'X-Trace-Id': trace_id
+                }
+              }
+            ]);
+          } catch (_) {};
+        });
+      },
       messages
     }, page);
   }
