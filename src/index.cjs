@@ -1,3 +1,5 @@
+'use strict';
+
 // in courtesy of https://stackoverflow.com/a/41854075
 function nameFunction(name, body) {
   return {
@@ -110,4 +112,4 @@ function KPSDK_SOLVER(config) {
   }
 }
 
-export { KPSDK_SOLVER as default };
+module.exports = KPSDK_SOLVER;
