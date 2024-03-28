@@ -68,7 +68,7 @@ const solver = new Solver(config);
     // `load-complete` indicates whether or not to fully load the target page
     // Kasada SDK options do not need to be specified when this option is enabled
     // when disabled, the target page is loaded as a blank page to reduce loading latency
-    'load-complete': false // default
+    'load-complete': false, // default
 
     // `url` specifies the target page URL which the browser will navigate to
     // this affects the Referer and Origin headers of requests, as well as other origin-dependant browser properties
