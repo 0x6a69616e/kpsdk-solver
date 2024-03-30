@@ -1,9 +1,22 @@
 # kpsdk-solver
 > A Playwright-based solver for Kasada's bot defense platform.
 
-Available as a replacer for `BrowserContext.newPage()` or `Browser.newPage()`
+Available as a replacement to Playwright's `BrowserContext.newPage()` and `Browser.newPage()`
 
-[Kasada](https://www.kasada.io/) is a bot detection and mitigation company that offers a [frictionless and secure alternative to CAPTCHAs](https://www.kasada.io/captcha-alternative/). Despite multiple attempts, many have been unsuccessful in reverse-engineering their defenses, prompting them to turn to solvers that come at a cost. Rather than reversing Kasada's complex system entirely, we manipulate the browser that runs it. Utilizing this concept, combined with an undetectable automated browser, we can operate Kasada's SDK ourselves to generate valid `x-kpsdk-*` headers.
+## Features
+- Extensive manipulation of the Kasada SDK
+  - Use custom script import
+  - Use custom configuration
+  - Inspect SDK messages
+  - Interact with Kasada's Fetch API
+  - Use same-page client token regeneration
+- Support for CommonJS (CJS) and ECMAScript (ESM) module use
+- Seamless integration with the Playwright library
+
+## Limitations
+- Does not work with Puppeteer
+- Fails to bypass detection on Chrom(e/ium) browsers
+- Fails to bypass detection on most Linux machines
 
 ## Installation
 ```sh
@@ -12,16 +25,16 @@ npm install kpsdk-solver
 
 ## Usage
 ```js
-const Solver = require('kpsdk-solver');
-const playwright = require('playwright');
-
+import playwright from 'playwright';
+import Solver from 'kpsdk-solver';
 const solver = new Solver(config);
 
 (async () => {
   const browser = await playwright.firefox.launch({ headless: true });
   const context = await browser.newContext();
-  const page = await solver.create(context, function (page) {
-    // access the page instance before the solver uses it
+
+  const page = await solver.create(context, page => {
+    // completely optional; access the page instance before the solver uses it
     console.log(page.url()); // should return about:blank or smthn
   });
 
@@ -43,11 +56,11 @@ const solver = new Solver(config);
 })();
 ```
 
-## Solver Config
+## Configuration
 ```js
 {
   kasada: {
-    // `configuration` specifies Kasada SDK configurations
+    // `configuration` specifies which endpoints Kasada should protect
     // passed to window.KPSDK.configure()
     configuration: [{
       domain: 'some-domain.com',
@@ -56,7 +69,7 @@ const solver = new Solver(config);
       protocol: 'https:'
     }],
 
-    // `sdk-script` specifies the SDK script to import
+    // `sdk-script` specifies the Kasada SDK script to import
     // passed to Page.addInitScript()
     // see available options at playwright.dev/docs/api/class-page#page-add-init-script-option-script
     'sdk-script': {
