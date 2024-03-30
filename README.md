@@ -1,7 +1,7 @@
 # kpsdk-solver
 > A Playwright-based solver for Kasada's bot defense platform.
 
-Available as a replacement to Playwright's `BrowserContext.newPage()` and `Browser.newPage()`
+Available as a replacement to `BrowserContext.newPage()` and `Browser.newPage()`
 
 ## Features
 - Extensive manipulation of the Kasada SDK
@@ -10,12 +10,12 @@ Available as a replacement to Playwright's `BrowserContext.newPage()` and `Brows
   - Inspect SDK messages
   - Interact with Kasada's Fetch API
   - Use same-page client token regeneration
-- Support for CommonJS (CJS) and ECMAScript (ESM) module use
+- Support for CommonJS (CJS) and ECMAScript module (ESM) use
 - Seamless integration with the Playwright library
 
 ## Limitations
-- Does not work with Puppeteer
-- Fails to bypass detection on Chrom(e/ium) browsers
+- Incompatible with Puppeteer
+- Fails to bypass detection on Chrom(e/ium) browsers; Firefox recommended
 - Fails to bypass detection on most Linux machines
 
 ## Installation
@@ -33,23 +33,22 @@ const solver = new Solver(config);
   const browser = await playwright.firefox.launch({ headless: true });
   const context = await browser.newContext();
 
+
   const page = await solver.create(context, page => {
     // completely optional; access the page instance before the solver uses it
     console.log(page.url()); // should return about:blank or smthn
   });
-
-  // solver entrypoint!
-  console.log(page.solver);
 
   // retrieve the SDK messages
   console.log(page.solver.messages); // KPSDK:DONE:...
 
   // make a modifiable fetch request
   const { route, request } = await fetch('/api/kasada-protected-endpoint');
-  //// refer to playwright.dev/docs/api/class-request
+  /// refer to playwright.dev/docs/api/class-request
   console.log(request.headers()); // capture the x-kpsdk-* headers of that request
-  //// refer to playwright.dev/docs/api/class-route
+  /// refer to playwright.dev/docs/api/class-route
   await route.abort(); // abort unless same-page client token regeneration should be used
+
   
   await context.close();
   await browser.close();
