@@ -21,13 +21,14 @@ Available as a replacement to [`Browser.newPage()`](https://playwright.dev/docs/
 
 ## Installation
 ```sh
-npm install kpsdk-solver
+$ npm install kpsdk-solver
 ```
 
 ## Usage
 ```js
 import playwright from 'playwright';
 import Solver from 'kpsdk-solver';
+
 const solver = new Solver(config);
 
 (async () => {
@@ -61,7 +62,7 @@ const solver = new Solver(config);
 {
   kasada: {
     // `configuration` specifies which endpoints Kasada should protect
-    // passed to window.KPSDK.configure()
+    // passed to Page.evaluate() => window.KPSDK.configure()
     configuration: [{
       domain: 'some-domain.com',
       method: 'POST',
