@@ -1,7 +1,7 @@
 # kpsdk-solver
 > A Playwright-based solver for Kasada's bot defense platform.
 
-Available as a replacement to `BrowserContext.newPage()` and `Browser.newPage()`
+Available as a replacement to [`Browser.newPage()`](https://playwright.dev/docs/api/class-browser#browser-new-page) and [`BrowserContext.newPage()`](https://playwright.dev/docs/api/class-browsercontext#browser-context-new-page)
 
 ## Features
 - Extensive manipulation of the Kasada SDK
@@ -15,8 +15,9 @@ Available as a replacement to `BrowserContext.newPage()` and `Browser.newPage()`
 
 ## Limitations
 - Incompatible with Puppeteer
-- Fails to bypass detection on Chrom(e/ium) browsers; Firefox recommended
-- Fails to bypass detection on most Linux machines
+- Fails to bypass detection on... (based on common occurrences - results may vary!)
+  - Chrom(e/ium) browsers; Firefox preferred [[article]](https://substack.thewebscraping.club/i/108229509/playwright-with-firefox) [[article]](https://substack.thewebscraping.club/i/99643353/the-tests-results) [[image]](https://substack-post-media.s3.amazonaws.com/public/images/f178b49a-6646-43f6-abe4-b09e3341f844_1178x225.png)
+  - Most Linux machines; Windows preferred
 
 ## Installation
 ```sh
