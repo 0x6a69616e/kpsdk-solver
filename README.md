@@ -14,7 +14,7 @@ Available as a replacement to [`Browser.newPage()`](https://playwright.dev/docs/
 - Seamless integration with the Playwright library
 
 ## Limitations
-- Incompatible with Puppeteer
+- Incompatible with Puppeteer *for now*
 - Fails to bypass detection on... (based on common occurrences - results may vary!)
   - Chrom(e/ium) browsers; Firefox preferred [[article]](https://substack.thewebscraping.club/i/108229509/playwright-with-firefox) [[article]](https://substack.thewebscraping.club/i/99643353/the-tests-results) [[image]](https://substack-post-media.s3.amazonaws.com/public/images/f178b49a-6646-43f6-abe4-b09e3341f844_1178x225.png)
   - Most Linux machines; Windows preferred
@@ -37,7 +37,7 @@ const solver = new Solver(config);
 
 
   const page = await solver.create(context, page => {
-    // completely optional; access the page instance before the solver uses it
+    // optional, page callback; access the page instance before the solver uses it
     console.log(page.url()); // should return about:blank or smthn
   });
 
@@ -51,7 +51,7 @@ const solver = new Solver(config);
   /// refer to playwright.dev/docs/api/class-route
   await route.abort(); // abort unless same-page client token regeneration should be used
 
-  
+
   await context.close();
   await browser.close();
 })();
@@ -81,8 +81,13 @@ const solver = new Solver(config);
   parent: {
     // `load-complete` indicates whether or not to fully load the target page
     // Kasada SDK options do not need to be specified when this option is enabled
-    // when disabled, the target page is loaded as a blank page to reduce loading latency
+    // when disabled, the target page loads with no content
     'load-complete': false, // default
+
+    // `request-tracing` indicates whether or not to trace Fetch requests initiated by `page.solver.fetch()`
+    // when enabled, such requests are assigned a unique identifier that can be accessed through their `X-Trace-Id` header
+    // this option should be enabled in scenarios where numerous requests for the same URL might occur simultaneously within the same page instance when calling `page.solver.fetch()`
+    'request-tracing': false, // default
 
     // `url` specifies the target page URL which the browser will navigate to
     // this affects the Referer and Origin headers of requests, as well as other origin-dependant browser properties
