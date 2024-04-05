@@ -15,15 +15,16 @@ function build(config) {
   return async (context, page_cb) => {
     const page = await context.newPage();
 
+    typeof page_cb !== 'function' || await page_cb(page);
+    
+    const rt = config?.parent.['request-tracing'];
     const sdk_config = config?.kasada?.configuration;
     const sdk_script = config?.kasada?.['sdk-script'];
     const {
       'load-complete': lc,
       url
     }  = config.parent;
-
-    typeof page_cb !== 'function' || await page_cb(page);
-
+    
     await page.goto(await (async () => {
       if (lc) return url;
 
@@ -65,17 +66,16 @@ function build(config) {
         once: true
       });
       !config || window.KPSDK.configure(config);
-    }), sdk_config);
-    page.removeListener('response', fp_listener);
+    }), sdk_config), page.removeListener('response', fp_listener);
 
     return (page.solver = {
       fetch(url, options = {}) {
         return new Promise(async (resolve, {
-          trace_id = makeId(),
+          trace_id = rt ? makeId() : 0..a,
           fn
         }) => {
-          await page.route(url, fn = nameFunction('_' + makeId(), async (route, request) => {
-            if (request.headers()['x-trace-id'] !== trace_id) return;
+          await page.route(url, fn = nameFunction(makeId(), async (route, request) => {
+            if (trace_id && (request.headers()['x-trace-id'] !== trace_id)) return;
             resolve({
               request,
               route
@@ -88,13 +88,13 @@ function build(config) {
           try {
             await page.evaluate(args => window.fetch(...args), [
               url,
-              {
+              trace_id ? {
                 ...options,
                 headers: {
                   ...options.headers,
                   'X-Trace-Id': trace_id
                 }
-              }
+              } : options
             ]);
           } catch (_) {};
         });
@@ -104,9 +104,9 @@ function build(config) {
   }
 }
 
-function KPSDK_SOLVER(config) {
+function KPSDK_SOLVER(c) {
   return {
-    create: build(config)
+    create: !c || build(c)
   }
 }
 
