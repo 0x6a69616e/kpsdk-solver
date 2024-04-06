@@ -14,8 +14,8 @@ Available as a replacement to [`Browser.newPage()`](https://playwright.dev/docs/
 - Seamless integration with the Playwright library
 
 ## Limitations
-- Incompatible with Puppeteer *for now*
-- Fails to bypass detection on... (based on common occurrences - results may vary!)
+- Only compatible with Playwright
+- Fails to bypass detection on... (based on common issues - results may vary)
   - Chrom(e/ium) browsers; Firefox preferred [[article]](https://substack.thewebscraping.club/i/108229509/playwright-with-firefox) [[article]](https://substack.thewebscraping.club/i/99643353/the-tests-results) [[image]](https://substack-post-media.s3.amazonaws.com/public/images/f178b49a-6646-43f6-abe4-b09e3341f844_1178x225.png)
   - Most Linux machines; Windows preferred
 
@@ -35,7 +35,6 @@ const solver = new Solver(config);
   const browser = await playwright.firefox.launch({ headless: true });
   const context = await browser.newContext();
 
-
   const page = await solver.create(context, page => {
     // optional, page callback; access the page instance before the solver uses it
     console.log(page.url()); // should return about:blank or smthn
@@ -45,13 +44,15 @@ const solver = new Solver(config);
   console.log(page.solver.messages); // KPSDK:DONE:...
 
   // make a modifiable fetch request
-  const { route, request } = await fetch('/api/kasada-protected-endpoint');
+  const { route, request } = await page.solver.fetch('/api/kasada-protected-endpoint');
+
   /// refer to playwright.dev/docs/api/class-request
-  console.log(request.headers()); // capture the x-kpsdk-* headers of that request
+  console.log(request.headers()); // capture the headers of that request, including x-kpsdk-*
+
   /// refer to playwright.dev/docs/api/class-route
   await route.abort(); // abort unless same-page client token regeneration should be used
 
-
+  await page.close();
   await context.close();
   await browser.close();
 })();
@@ -76,8 +77,7 @@ const solver = new Solver(config);
 
   // `request-tracing` indicates whether or not to trace Fetch requests initiated by `page.solver.fetch()`
   // when enabled, such requests are assigned a unique identifier that can be accessed through the `X-Trace-Id` header
-  // this option should be enabled in scenarios where numerous requests for the same URL might occur simultaneously within the same page instance when calling `page.solver.fetch()`
-  // the presence of an unused or uncommon header might affect bot detection scores for your target service, so modifications may be necessary
+  // this option should be enabled in scenarios where numerous requests for the same URL might happen simultaneously within the same page instance when calling `page.solver.fetch()`
   'request-tracing': false, // default
 
   // `sdk-script` specifies the Kasada SDK script to import
