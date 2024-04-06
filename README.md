@@ -60,39 +60,36 @@ const solver = new Solver(config);
 ## Configuration
 ```js
 {
-  kasada: {
-    // `configuration` specifies which endpoints Kasada should protect
-    // passed to Page.evaluate() => window.KPSDK.configure()
-    configuration: [{
-      domain: 'some-domain.com',
-      method: 'POST',
-      path: '/api/kasada-protected-endpoint',
-      protocol: 'https:'
-    }],
+  // `kasada` specifies which endpoints Kasada should protect
+  // passed to Page.evaluate() => window.KPSDK.configure()
+  kasada: [{
+    domain: 'some-domain.com',
+    method: 'POST',
+    path: '/api/kasada-protected-endpoint',
+    protocol: 'https:'
+  }],
 
-    // `sdk-script` specifies the Kasada SDK script to import
-    // passed to Page.addInitScript()
-    // see available options at playwright.dev/docs/api/class-page#page-add-init-script-option-script
-    'sdk-script': {
-      url: 'https://some-domain.com/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/p.js'
-    }
+  // `load-complete` indicates whether or not to fully load the target page
+  // Kasada endpoint configurations do not need to be specified when this option is enabled
+  // when disabled, the target page loads with no content
+  'load-complete': false, // default
+
+  // `request-tracing` indicates whether or not to trace Fetch requests initiated by `page.solver.fetch()`
+  // when enabled, such requests are assigned a unique identifier that can be accessed through the `X-Trace-Id` header
+  // this option should be enabled in scenarios where numerous requests for the same URL might occur simultaneously within the same page instance when calling `page.solver.fetch()`
+  // the presence of an unused or uncommon header might affect bot detection scores for your target service, so modifications may be necessary
+  'request-tracing': false, // default
+
+  // `sdk-script` specifies the Kasada SDK script to import
+  // passed to Page.addInitScript()
+  // see available options at playwright.dev/docs/api/class-page#page-add-init-script-option-script
+  'sdk-script': {
+    url: 'https://some-domain.com/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/p.js'
   },
 
-  parent: {
-    // `load-complete` indicates whether or not to fully load the target page
-    // Kasada SDK options do not need to be specified when this option is enabled
-    // when disabled, the target page loads with no content
-    'load-complete': false, // default
-
-    // `request-tracing` indicates whether or not to trace Fetch requests initiated by `page.solver.fetch()`
-    // when enabled, such requests are assigned a unique identifier that can be accessed through their `X-Trace-Id` header
-    // this option should be enabled in scenarios where numerous requests for the same URL might occur simultaneously within the same page instance when calling `page.solver.fetch()`
-    'request-tracing': false, // default
-
-    // `url` specifies the target page URL which the browser will navigate to
-    // this affects the Referer and Origin headers of requests, as well as other origin-dependant browser properties
-    // HTTP redirects are still considered when `load-complete` is disabled
-    url: 'https://some-domain.com'
-  }
+  // `url` specifies the target page URL which the browser will navigate to
+  // this affects the Referer and Origin headers of requests, as well as other origin-dependant properties
+  // HTTP redirects are still considered when `load-complete` is disabled
+  url: 'https://some-domain.com'
 }
 ```
