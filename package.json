@@ -8,7 +8,7 @@
     "require": "./src/index.cjs"
   },
   "author": "0x6a69616e",
-  "description": "A solver for Kasada's bot mitigation service.",
+  "description": "A Playwright-based solver for Kasada's bot defense platform.",
   "keywords": [
     "twitch",
     "kick",
