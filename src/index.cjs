@@ -1,3 +1,5 @@
+'use strict';
+
 // in courtesy of https://stackoverflow.com/a/41854075
 function nameFunction(name, body) {
   return {
@@ -123,4 +125,4 @@ function build(config) {
   };
 }
 
-export { build as default };
+module.exports = build;
