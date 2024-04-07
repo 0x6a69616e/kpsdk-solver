@@ -48,7 +48,6 @@ const solver = new Solver(config);
 
   /// refer to playwright.dev/docs/api/class-request
   console.log(request.headers()); // capture the headers of that request, including x-kpsdk-*
-
   /// refer to playwright.dev/docs/api/class-route
   await route.abort(); // abort unless same-page client token regeneration should be used
 
@@ -61,8 +60,7 @@ const solver = new Solver(config);
 ## Configuration
 ```js
 {
-  // `kasada` specifies which endpoints Kasada should protect
-  // passed to Page.evaluate() => window.KPSDK.configure()
+  // `kasada` specifies Kasada-protected endpoints in a parsed format
   kasada: [{
     domain: 'some-domain.com',
     method: 'POST',
@@ -70,8 +68,8 @@ const solver = new Solver(config);
     protocol: 'https:'
   }],
 
-  // `load-complete` indicates whether or not to fully load the target page
-  // Kasada endpoint configurations do not need to be specified when this option is enabled
+  // `load-complete` indicates whether or not to completely load the target page
+  // Kasada-protected endpoint configurations do not need to be specified when this option is enabled
   // when disabled, the target page loads with no content
   'load-complete': false, // default
 
@@ -81,7 +79,6 @@ const solver = new Solver(config);
   'request-tracing': false, // default
 
   // `sdk-script` specifies the Kasada SDK script to import
-  // passed to Page.addInitScript()
   // see available options at playwright.dev/docs/api/class-page#page-add-init-script-option-script
   'sdk-script': {
     url: 'https://some-domain.com/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/p.js'
