@@ -9,7 +9,20 @@
   },
   "author": "0x6a69616e",
   "description": "A solver for Kasada's bot mitigation service.",
-  "keywords": [],
+  "keywords": [
+    "twitch",
+    "kick",
+    "playstation",
+    "psn",
+    "nike",
+    "kasada",
+    "kpsdk",
+    "x-kpsdk-ct",
+    "x-kpsdk-cd",
+    "kpsdk-cd",
+    "kpsdk-ct",
+    "kpsdk-solver"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
